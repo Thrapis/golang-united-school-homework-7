@@ -2,6 +2,9 @@ package coverage
 
 import (
 	"os"
+	"testing"
+	"time"
+	"github.com/stretchr/testify/assert"
 )
 
 // DO NOT EDIT THIS FUNCTION
@@ -17,4 +20,55 @@ func init() {
 }
 
 // WRITE YOUR CODE BELOW
+
+var people = People{
+	Person{"Art", "Bel", time.Now().Add(time.Hour * -60)},
+	Person{"Nic", "Bar", time.Now()},
+	Person{"Ant", "Cor", time.Now()},
+	Person{"Ant", "Coz", time.Now()},
+}
+
+func TestPeopleLen(t *testing.T) {
+	assert.Equal(t, people.Len(),  len(people))
+}
+
+func TestPeopleLess(t *testing.T) {
+	assert.True(t, people.Less(1, 0))
+	assert.False(t, people.Less(1, 2))
+	assert.True(t, people.Less(2, 3))
+}
+
+func TestPeopleSwap(t *testing.T) {
+	peopleSwap := make(People, len(people))
+	copy(peopleSwap, people)
+	peopleSwap.Swap(0, 3)
+	assert.NotEqual(t, peopleSwap[0], people[0])
+}
+
+var stringMatrix = "1 2 4 7 1\n 2 3 1 6 3"
+var stringMatrixBadRow = "1 2 4 7 1\n 2 3 1 6 3\n2 9"
+var stringMatrixBadSymbol = "1 2 4 a 1\n 2 3 1 3 3"
+var matrix = Matrix{2, 3, []int{1, 2, 3, 4, 5, 6}}
+
+func TestMatrixNew(t *testing.T) {
+	_, err := New(stringMatrix)
+	assert.Nil(t, err)
+	_, errBadRow := New(stringMatrixBadRow)
+	assert.NotNil(t, errBadRow)
+	_, errBadSymbol := New(stringMatrixBadSymbol)
+	assert.NotNil(t, errBadSymbol)
+}
+
+func TestMatrixRowAndCols(t *testing.T) {
+	assert.Equal(t, len(matrix.Rows()), matrix.rows)
+	assert.Equal(t, len(matrix.Cols()), matrix.cols)
+}
+
+func TestMatrixSet(t *testing.T) {
+	var matrixSet = Matrix{2, 2, []int{1, 2, 3, 4}}
+	var set = 5
+	assert.False(t, matrixSet.Set(3, 1, set))
+	assert.True(t, matrixSet.Set(0, 1, set))
+	assert.Equal(t, matrixSet.data[1], set)
+}
 
